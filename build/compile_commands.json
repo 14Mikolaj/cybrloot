@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/main.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/main.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/main.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/Panel.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/Panel.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/Panel.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/Panel.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/CybrUtil.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/CybrUtil.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/CybrUtil.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/CybrUtil.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/Element.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/Element.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/Element.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/Element.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/cybrloot.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/cybrloot.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/cybrloot.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/cybrloot.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/UIManager.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/UIManager.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/UIManager.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/UIManager.cpp.o"
+},
+{
+  "directory": "/home/rai/Projects/coding/cpp/cybrloot/build",
+  "command": "/usr/bin/c++  -I/home/rai/Projects/coding/cpp/cybrloot/include -g -o CMakeFiles/cybrloot.dir/src/Scene.cpp.o -c /home/rai/Projects/coding/cpp/cybrloot/src/Scene.cpp",
+  "file": "/home/rai/Projects/coding/cpp/cybrloot/src/Scene.cpp",
+  "output": "CMakeFiles/cybrloot.dir/src/Scene.cpp.o"
+}
+]
