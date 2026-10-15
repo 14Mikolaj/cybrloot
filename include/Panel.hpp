@@ -16,6 +16,7 @@ public:
             const std::string& _border = "thin",
             const std::string& _theme = "CachyOS");
     void draw() const;
+    void update() const;
     void add_element(std::unique_ptr<Element> element);
 private:
     int x_pos;

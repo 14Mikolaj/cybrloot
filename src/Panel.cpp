@@ -55,6 +55,12 @@ void Panel::draw() const {
     std::cout << "\033[100;10H";
 }
 
+void Panel::update() const {
+    for (const auto& element : elements) {
+        element->update(x_pos, y_pos);
+    }
+}
+
 void Panel::add_element(std::unique_ptr<Element> element) {
   elements.push_back(std::move(element)); 
 }

@@ -17,3 +17,14 @@ void Scene::draw() const {
         panel.draw();
     }
 }
+
+void Scene::update() const {
+
+    for (const auto& panel : panels) {
+        panel.update();
+    }
+}
+
+const std::string& Scene::get_name() const {
+    return name;
+}
