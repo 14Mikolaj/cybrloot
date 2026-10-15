@@ -18,6 +18,7 @@ public:
     void draw() const;
     void update() const;
     void add_element(std::unique_ptr<Element> element);
+    const TextColor& resolve_color(Element::ColorRole role) const;
 private:
     int x_pos;
     int y_pos;

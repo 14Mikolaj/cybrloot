@@ -16,7 +16,7 @@ Panel::Panel(int _x, int _y, int _w, int _h,
 void Panel::draw() const {
     std::string out_buffer;
     int title_start = (width - title.size()) / 2;
-    out_buffer += "\033[38;5;" + std::to_string(theme.fg) + "m\033[48;5;" + std::to_string(theme.bg) + "m";
+    out_buffer += "\033[38;5;" + std::to_string(theme.normal.fg) + "m\033[48;5;" + std::to_string(theme.normal.bg) + "m";
 
     for ( int row = 0; row <= height + 1; row++) {
         out_buffer += "\033[" + std::to_string(y_pos + row) + ";" + std::to_string(x_pos) + "H";
@@ -49,18 +49,30 @@ void Panel::draw() const {
     std::cout << out_buffer;
 
     for (const auto& element : elements) {
-        element->draw(x_pos, y_pos);
+        const TextColor& color = resolve_color(element->color_role());
+        element->draw(x_pos, y_pos, color);
     }
 
-    std::cout << "\033[100;10H";
 }
 
 void Panel::update() const {
     for (const auto& element : elements) {
-        element->update(x_pos, y_pos);
+        const TextColor& color = resolve_color(element->color_role());
+        element->update(x_pos, y_pos, color);
     }
 }
 
 void Panel::add_element(std::unique_ptr<Element> element) {
   elements.push_back(std::move(element)); 
+}
+
+const TextColor& Panel::resolve_color(Element::ColorRole role) const {
+    switch (role) {
+        case Element::ColorRole::Highlight:
+            return theme.highlight;
+        case Element::ColorRole::Accent:
+            return theme.accent;
+        default:
+            return theme.normal;
+    }
 }

@@ -1,5 +1,7 @@
 //UIManager.cpp
 
+#include <iostream>
+
 #include "UIManager.hpp"
 
 void UIManager::add_scene(std::unique_ptr<Scene> scene) {
@@ -16,10 +18,12 @@ void UIManager::set_scene(std::string scene_name) {
 void UIManager::draw_scene() {
     if (cur_scene) {
         cur_scene->draw();
+        std::cout << std::flush;
     }
 }
 void UIManager::update_scene() {
     if (cur_scene) {
         cur_scene->update();
+        std::cout << std::flush;
     }
 }
