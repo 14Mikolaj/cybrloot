@@ -13,6 +13,7 @@ target_sources(cybrloot
     src/cybrloot.cpp
     src/UIManager.cpp
     src/Scene.cpp
+    src/TerminalWrapper.cpp
     PUBLIC
     FILE_SET HEADERS
     BASE_DIRS
@@ -25,6 +26,7 @@ target_sources(cybrloot
     include/cybrloot.hpp
     include/UIManager.hpp
     include/Scene.hpp
+    include/TerminalWrapper.hpp
 )
 
 target_compile_features(cybrloot 

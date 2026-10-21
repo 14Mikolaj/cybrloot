@@ -3,11 +3,14 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <termios.h>
+#include <unistd.h>
 
 #include "Scene.hpp"
 #include "Panel.hpp"
 #include "CybrUtil.hpp"
 #include "UIManager.hpp"
+#include "TerminalWrapper.hpp"
 
 using namespace CybrUtil;
 
@@ -17,16 +20,20 @@ struct game_data {
 };
 
 int main() {
+    TerminalWrapper Terminal;
+    Terminal.init();
+    char key;
+
     game_data game{100, 50};
     UIManager UI;
 
     Scene welcome("welcome");
     Panel welcome_panel(5, 3, 55, 10, "Welcome", "double", "Mint");
     welcome_panel.add_element(std::make_unique<Text>(2, 2, "Welcome to cybrloot. Have you played before?"));
-    auto load_button = std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){});
-    Button* load_ptr = load_button.get();
-    welcome_panel.add_element(std::move(load_button));
-    //welcome_panel.add_element(std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){})); 
+    //auto load_button = std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){});
+    ///Button* load_ptr = load_button.get();
+    //welcome_panel.add_element(std::move(load_button));
+    welcome_panel.add_element(std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){})); 
     welcome_panel.add_element(std::make_unique<Text>(25, 5, "[NEW GAME]")); 
     welcome.add_panel(std::move(welcome_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(welcome)));
@@ -45,22 +52,17 @@ int main() {
     cls();
     UI.draw_scene();
 
-    bool tog = false;
-    for (int i = 0; i < 15; i++) {
-        load_ptr->set_state(tog);
-        game.data += 250;
+    while (true) {
+        read(STDIN_FILENO, &key, 1);
+        debug(std::string(1,key));
         UI.update_scene();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        tog = !tog;
-    }
-    for (int i = 0; i < 1; i ++) {
-        game.data -= 400;
-        UI.update_scene();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        if (key == 'q') {
+            Terminal.restore();
+            break;
+        }
     }
 
-
-    std::cout << "\nHello World!\n";
+    debug("Hello World", 2);
     return 0;
 }
 
