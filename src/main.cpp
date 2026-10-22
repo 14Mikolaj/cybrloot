@@ -5,6 +5,7 @@
 #include <thread>
 #include <termios.h>
 #include <unistd.h>
+#include <poll.h>
 
 #include "Scene.hpp"
 #include "Panel.hpp"
@@ -14,18 +15,22 @@
 
 using namespace CybrUtil;
 
-struct game_data {
-    int data;
-    int money;
-};
 
 int main() {
     TerminalWrapper Terminal;
     Terminal.init();
-    char key;
+    pollfd pfd{STDIN_FILENO, POLLIN, 0};
+    using Clock = std::chrono::steady_clock;
+    constexpr auto tick = std::chrono::milliseconds(6);
+    constexpr double tick_seconds = 0.006;
+    auto previous = Clock::now();
+    Clock::duration accumulator = Clock::duration::zero();
+    double data_fraction = 0.0;
+    double data_per_second = 1.0;
 
     game_data game{100, 50};
     UIManager UI;
+    action input;
 
     Scene welcome("welcome");
     Panel welcome_panel(5, 3, 55, 10, "Welcome", "double", "Mint");
@@ -48,18 +53,32 @@ int main() {
     dashboard.add_panel(std::move(data_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(dashboard)));
 
-    UI.set_scene("welcome");
+    UI.set_scene("dashboard");
     cls();
     UI.draw_scene();
 
     while (true) {
-        read(STDIN_FILENO, &key, 1);
-        debug(std::string(1,key));
-        UI.update_scene();
-        if (key == 'q') {
-            Terminal.restore();
-            break;
+        int ready = poll(&pfd, 1, 6);
+        if (ready) {
+            input = Terminal.parse_input();
+            debug(a_to_string(input));
+            //UI.process_input(input);
+            if (input == action::quit) {
+                break;
+            }
         }
+        auto now = Clock::now();
+        accumulator += now - previous;
+        previous = now;
+        auto ticks = accumulator / tick;
+        accumulator -= ticks * tick;
+        if (ticks > 0) {
+            data_fraction += ticks * tick_seconds * data_per_second;
+            int earned = static_cast<int>(data_fraction);
+            game.data += earned;
+            data_fraction -= earned;
+        }
+        UI.update_scene();
     }
 
     debug("Hello World", 2);
