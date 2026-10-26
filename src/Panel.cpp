@@ -76,3 +76,7 @@ const TextColor& Panel::resolve_color(Element::ColorRole role) const {
             return theme.normal;
     }
 }
+
+const std::vector<std::unique_ptr<Element>>& Panel::get_elements() const {
+    return elements;
+}

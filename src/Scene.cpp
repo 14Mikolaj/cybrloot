@@ -28,3 +28,7 @@ void Scene::update() const {
 const std::string& Scene::get_name() const {
     return name;
 }
+
+const std::vector<Panel>& Scene::get_panels() const {
+    return panels;
+}

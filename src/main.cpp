@@ -26,7 +26,7 @@ int main() {
     auto previous = Clock::now();
     Clock::duration accumulator = Clock::duration::zero();
     double data_fraction = 0.0;
-    double data_per_second = 1.0;
+    double data_per_second = 90.0;
 
     game_data game{100, 50};
     UIManager UI;
@@ -39,7 +39,7 @@ int main() {
     ///Button* load_ptr = load_button.get();
     //welcome_panel.add_element(std::move(load_button));
     welcome_panel.add_element(std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){})); 
-    welcome_panel.add_element(std::make_unique<Text>(25, 5, "[NEW GAME]")); 
+    welcome_panel.add_element(std::make_unique<Button>(25, 5, "[NEW GAME]", [](){})); 
     welcome.add_panel(std::move(welcome_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(welcome)));
 
@@ -48,12 +48,12 @@ int main() {
     Scene loadsave("loadsave");
 
     Scene dashboard("dashboard");
-    Panel data_panel(50,20,20,8, "DATA", "thick", "Ubuntu");
+    Panel data_panel(50,50,20,8, "DATA", "double", "Mint");
     data_panel.add_element(std::make_unique<Text>(0, 0, [&game](){return "DATA: " + std::to_string(game.data);}));
     dashboard.add_panel(std::move(data_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(dashboard)));
 
-    UI.set_scene("dashboard");
+    UI.set_scene("welcome");
     cls();
     UI.draw_scene();
 
@@ -62,7 +62,7 @@ int main() {
         if (ready) {
             input = Terminal.parse_input();
             debug(a_to_string(input));
-            //UI.process_input(input);
+            UI.process_input(input);
             if (input == action::quit) {
                 break;
             }

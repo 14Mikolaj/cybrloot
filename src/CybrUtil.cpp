@@ -31,6 +31,8 @@ namespace CybrUtil {
                 return "down";
             case action::quit:
                 return "quit";
+            case action::select:
+                return "select";
             default:
                 return "unknown";
         }

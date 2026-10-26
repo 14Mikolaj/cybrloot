@@ -4,8 +4,10 @@
 
 #include <memory>
 #include <utility>
+#include <optional>
 
 #include "Scene.hpp"
+#include "CybrUtil.hpp"
 
 class UIManager {
     public:
@@ -14,7 +16,11 @@ class UIManager {
         void draw_scene();
         void update_scene();
         void init(std::string path);
+        void process_input(CybrUtil::action input);
     private:
+        void get_focusable_list();
         std::vector<std::unique_ptr<Scene>> scenes;
         Scene* cur_scene = nullptr;
+        std::vector<Button*> focusables;
+        std::optional<std::size_t> focused_index;
 };

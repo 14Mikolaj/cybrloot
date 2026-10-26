@@ -15,6 +15,7 @@ public:
     void draw() const;
     const std::string& get_name() const;
     void update() const;
+    const std::vector<Panel>& get_panels() const;
 private:
     std::string name;
     std::vector<Panel> panels;

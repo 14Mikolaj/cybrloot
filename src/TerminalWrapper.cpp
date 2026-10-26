@@ -58,6 +58,9 @@ action TerminalWrapper::parse_input() {
         case 'q':
         case 'Q':
             return action::quit;
+        case '\r':
+        case '\n':
+            return action::select;
     }
     return action::none;
 }

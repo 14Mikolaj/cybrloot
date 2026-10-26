@@ -21,6 +21,7 @@ namespace CybrUtil {
         up,
         down,
         quit,
+        select,
     };
 
     std::string a_to_string(action a);
