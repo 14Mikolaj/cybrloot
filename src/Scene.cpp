@@ -9,6 +9,7 @@ Scene::Scene(const std::string& _name) :
     name(_name){}
 
 void Scene::add_panel(Panel panel) {
+    panel.layout_elements();
     panels.push_back(std::move(panel));
 }
 

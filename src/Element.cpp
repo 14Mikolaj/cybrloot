@@ -3,23 +3,38 @@
 #include <iostream>
 #include <algorithm>
 #include <utility>
+#include <cmath>
 
 #include "Element.hpp"
 
-Element::Element(int _x, int _y) :
-    x(_x), y(_y){}
+Element::Element(Position _position) :
+    x(0), y(0), position(_position) {
+        if (position.mode == Position::Mode::Absolute) {
+            x = static_cast<int>(position.x);
+            y = static_cast<int>(position.y);
+        }
+    };
 
     Element::ColorRole Element::color_role() const {
     return ColorRole::Normal;
 }
 
+void Element::layout_relative(int parent_w, int parent_h) {
+    if (position.mode != Position::Mode::Relative) {
+        return;
+    }
+    x = (parent_w * position.x) - std::round(get_width() / 2.0f);
+    y = (parent_h * position.y) - std::round(get_height() / 2.0f);
+}
+
+
 //static text
-Text::Text(int _x, int _y, std::string _content) :
-    Element(_x, _y), content([text = std::move(_content)](){return text;}){}
+Text::Text(Position _position, std::string _content) :
+    Element(_position), content([text = std::move(_content)](){return text;}){}
 
 //dynamic text
-Text::Text(int _x, int _y, std::function<std::string()> _content) :
-    Element(_x, _y), content(std::move(_content)){}
+Text::Text(Position _position, std::function<std::string()> _content) :
+    Element(_position), content(std::move(_content)){}
 
 void Text::draw(int parent_x, int parent_y, const TextColor& color) const {
     std::string new_content = content();
@@ -53,8 +68,16 @@ void Text::update(int parent_x, int parent_y, const TextColor& color) const {
     dirty = false;
 }
 
-Button::Button(int _x, int _y, std::string _label, std::function<void()> _action) :
-    Element(_x, _y), label(std::move(_label)), action(std::move(_action)), highlighted(false){}
+int Text::get_width() const {
+    return content().length();
+}
+
+int Text::get_height() const {
+    return 1;
+}
+
+Button::Button(Position _position, std::string _label, std::function<void()> _action) :
+    Element(_position), label(std::move(_label)), action(std::move(_action)), highlighted(false){}
 
     Button::ColorRole Button::color_role() const {
         return highlighted ? ColorRole::Highlight : ColorRole::Normal;
@@ -71,6 +94,7 @@ void Button::draw(int parent_x, int parent_y, const TextColor& color) const {
     out_buffer += std::to_string(parent_y + y + 1) + ";" + std::to_string(parent_x + x + 1) + "H";
     out_buffer += "\033[38;5;" + std::to_string(color.fg) + "m\033[48;5;" + std::to_string(color.bg) + "m";
     out_buffer += label;
+    out_buffer += "\033[0m";
     std::cout << out_buffer;
     last_state = highlighted;
     dirty = false;
@@ -84,9 +108,18 @@ void Button::update(int parent_x, int parent_y, const TextColor& color) const {
     out_buffer += std::to_string(parent_y + y + 1) + ";" + std::to_string(parent_x + x + 1) + "H";
     out_buffer += "\033[38;5;" + std::to_string(color.fg) + "m\033[48;5;" + std::to_string(color.bg) + "m";
     out_buffer += label;
+    out_buffer += "\033[0m";
     std::cout << out_buffer;
     last_state = highlighted;
     dirty = false;
+}
+
+int Button::get_width() const {
+    return label.size();
+}
+
+int Button::get_height() const {
+    return 1;
 }
 
 void Button::set_state(bool state){

@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "Panel.hpp"
+#include "CybrUtil.hpp"
 
 Panel::Panel(int _x, int _y, int _w, int _h,
         const std::string& _title,
@@ -57,6 +58,7 @@ void Panel::draw() const {
 
 void Panel::update() const {
     for (const auto& element : elements) {
+        element->layout_relative(width, height);
         const TextColor& color = resolve_color(element->color_role());
         element->update(x_pos, y_pos, color);
     }
@@ -64,6 +66,12 @@ void Panel::update() const {
 
 void Panel::add_element(std::unique_ptr<Element> element) {
   elements.push_back(std::move(element)); 
+}
+
+void Panel::layout_elements() { 
+    for (auto& element : elements) {
+        element->layout_relative(width, height);
+    }
 }
 
 const TextColor& Panel::resolve_color(Element::ColorRole role) const {
@@ -80,3 +88,4 @@ const TextColor& Panel::resolve_color(Element::ColorRole role) const {
 const std::vector<std::unique_ptr<Element>>& Panel::get_elements() const {
     return elements;
 }
+

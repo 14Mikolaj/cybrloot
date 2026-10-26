@@ -34,12 +34,12 @@ int main() {
 
     Scene welcome("welcome");
     Panel welcome_panel(5, 3, 55, 10, "Welcome", "double", "Mint");
-    welcome_panel.add_element(std::make_unique<Text>(2, 2, "Welcome to cybrloot. Have you played before?"));
+    welcome_panel.add_element(std::make_unique<Text>(Position::absolute(2, 2), "Welcome to cybrloot. Have you played before?"));
     //auto load_button = std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){});
     ///Button* load_ptr = load_button.get();
     //welcome_panel.add_element(std::move(load_button));
-    welcome_panel.add_element(std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){})); 
-    welcome_panel.add_element(std::make_unique<Button>(25, 5, "[NEW GAME]", [](){})); 
+    welcome_panel.add_element(std::make_unique<Button>(Position::relative(0.33f, 0.50f), "[LOAD GAME]", [&UI](){})); 
+    welcome_panel.add_element(std::make_unique<Button>(Position::relative(0.66f, 0.50f), "[NEW GAME]", [&UI](){cls();UI.set_scene("dashboard");UI.draw_scene();})); 
     welcome.add_panel(std::move(welcome_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(welcome)));
 
@@ -49,7 +49,7 @@ int main() {
 
     Scene dashboard("dashboard");
     Panel data_panel(50,50,20,8, "DATA", "double", "Mint");
-    data_panel.add_element(std::make_unique<Text>(0, 0, [&game](){return "DATA: " + std::to_string(game.data);}));
+    data_panel.add_element(std::make_unique<Text>(Position::absolute(2, 2), [&game](){return "DATA: " + std::to_string(game.data);}));
     dashboard.add_panel(std::move(data_panel));
     UI.add_scene(std::make_unique<Scene>(std::move(dashboard)));
 
