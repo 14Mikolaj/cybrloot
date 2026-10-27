@@ -2,17 +2,28 @@
 
 #include <iostream>
 #include <utility>
+#include <algorithm>
 
 #include "Panel.hpp"
 #include "CybrUtil.hpp"
 
-Panel::Panel(int _x, int _y, int _w, int _h,
+Panel::Panel(PanelPosition _position,
         const std::string& _title,
         const std::string& _border,
         const std::string& _theme) :
-    x_pos(_x), y_pos(_y), width(_w), height(_h),
+    position(_position),
     title(_title), border(border_palette.at(_border)),
-    theme(color_palette.at(_theme)){}
+    theme(color_palette.at(_theme)){
+        if (position.mode == PanelPosition::Mode::Absolute) {
+            x_pos = static_cast<int>(position.x);
+            y_pos = static_cast<int>(position.y);
+            width = static_cast<int>(position.w);
+            height = static_cast<int>(position.h);
+
+        } else {
+            x_pos = y_pos = width = height = 0;
+        }
+    }
 
 void Panel::draw() const {
     std::string out_buffer;
@@ -58,7 +69,6 @@ void Panel::draw() const {
 
 void Panel::update() const {
     for (const auto& element : elements) {
-        element->layout_relative(width, height);
         const TextColor& color = resolve_color(element->color_role());
         element->update(x_pos, y_pos, color);
     }
@@ -66,6 +76,22 @@ void Panel::update() const {
 
 void Panel::add_element(std::unique_ptr<Element> element) {
   elements.push_back(std::move(element)); 
+}
+
+void Panel::layout(const CybrUtil::Terminal term) {
+    if (position.mode == PanelPosition::Mode::Relative) {
+        int available_width = std::max(0, term.width - (2 * term.margin));
+        int available_height = std::max(0, term.height - (2 * term.margin));
+        width = std::max(0, int(position.w * available_width) - 2);
+        height = std::max(0, int(position.h * available_height) - 2);
+        x_pos = std::clamp(int((position.x * available_width) + term.margin + 1) - static_cast<int>((width + 2) / 2),
+               term.margin + 1,
+               std::max(term.margin + 1, term.margin + 1 + available_width - (width + 2)));
+        y_pos = std::clamp(int((position.y * available_height) + term.margin + 1) - static_cast<int>((height + 2) / 2),
+                term.margin + 1,
+                std::max(term.margin + 1, term.margin + 1 + available_height - (height + 2)));
+    }
+    layout_elements();
 }
 
 void Panel::layout_elements() { 
@@ -83,6 +109,10 @@ const TextColor& Panel::resolve_color(Element::ColorRole role) const {
         default:
             return theme.normal;
     }
+}
+
+const PanelPosition::Mode Panel::get_panel_position() const {
+    return position.mode;
 }
 
 const std::vector<std::unique_ptr<Element>>& Panel::get_elements() const {

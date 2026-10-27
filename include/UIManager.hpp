@@ -11,13 +11,16 @@
 
 class UIManager {
     public:
+        UIManager(CybrUtil::Terminal& _term);
         void add_scene(std::unique_ptr<Scene> scene);
         void set_scene(std::string scene_name);
         void draw_scene();
         void update_scene();
-        void init(std::string path);
+        void init(CybrUtil::GameData& game);
         void process_input(CybrUtil::action input);
+        void layout_panels();
     private:
+        CybrUtil::Terminal& term;
         void get_focusable_list();
         std::vector<std::unique_ptr<Scene>> scenes;
         Scene* cur_scene = nullptr;

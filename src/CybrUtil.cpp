@@ -1,6 +1,8 @@
 //CybrUtil.cpp
 
 #include <iostream>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 #include "CybrUtil.hpp"
 
@@ -36,6 +38,18 @@ namespace CybrUtil {
             default:
                 return "unknown";
         }
+    }
+
+    bool terminal_changed(Terminal& _terminal_size, Terminal& _last_terminal_size) {
+        winsize size{};
+        ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+        _terminal_size.width = size.ws_col;
+        _terminal_size.height = size.ws_row;
+        if (_terminal_size.width != _last_terminal_size.width || _terminal_size.height != _last_terminal_size.height) {
+            _last_terminal_size = _terminal_size;
+            return 1;
+        }
+        return 0;
     }
 
 }

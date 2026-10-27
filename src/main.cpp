@@ -17,6 +17,9 @@ using namespace CybrUtil;
 
 
 int main() {
+    Terminal terminal_size{0, 0, 2};
+    Terminal last_terminal_size = terminal_size;
+
     TerminalWrapper Terminal;
     Terminal.init();
     pollfd pfd{STDIN_FILENO, POLLIN, 0};
@@ -28,36 +31,22 @@ int main() {
     double data_fraction = 0.0;
     double data_per_second = 90.0;
 
-    game_data game{100, 50};
-    UIManager UI;
+    GameData game{100, 50};
+    UIManager UI(terminal_size);
     action input;
 
-    Scene welcome("welcome");
-    Panel welcome_panel(5, 3, 55, 10, "Welcome", "double", "Mint");
-    welcome_panel.add_element(std::make_unique<Text>(Position::absolute(2, 2), "Welcome to cybrloot. Have you played before?"));
-    //auto load_button = std::make_unique<Button>(10, 5, "[LOAD GAME]", [](){});
-    ///Button* load_ptr = load_button.get();
-    //welcome_panel.add_element(std::move(load_button));
-    welcome_panel.add_element(std::make_unique<Button>(Position::relative(0.33f, 0.50f), "[LOAD GAME]", [&UI](){})); 
-    welcome_panel.add_element(std::make_unique<Button>(Position::relative(0.66f, 0.50f), "[NEW GAME]", [&UI](){cls();UI.set_scene("dashboard");UI.draw_scene();})); 
-    welcome.add_panel(std::move(welcome_panel));
-    UI.add_scene(std::make_unique<Scene>(std::move(welcome)));
-
-    Scene newplayer("newplayer");
-
-    Scene loadsave("loadsave");
-
-    Scene dashboard("dashboard");
-    Panel data_panel(50,50,20,8, "DATA", "double", "Mint");
-    data_panel.add_element(std::make_unique<Text>(Position::absolute(2, 2), [&game](){return "DATA: " + std::to_string(game.data);}));
-    dashboard.add_panel(std::move(data_panel));
-    UI.add_scene(std::make_unique<Scene>(std::move(dashboard)));
-
-    UI.set_scene("welcome");
+    UI.init(game);
+    terminal_changed(terminal_size, last_terminal_size);
+    UI.layout_panels();
     cls();
     UI.draw_scene();
 
     while (true) {
+        if (terminal_changed(terminal_size, last_terminal_size)) {
+            UI.layout_panels();
+            cls();
+            UI.draw_scene();
+        }
         int ready = poll(&pfd, 1, 6);
         if (ready) {
             input = Terminal.parse_input();

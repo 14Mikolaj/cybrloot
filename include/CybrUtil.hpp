@@ -9,7 +9,7 @@ namespace CybrUtil {
     void cls(); 
     void debug(std::string text, int row = 0);
     
-    struct game_data {
+    struct GameData {
         int data;
         int money;
     };
@@ -25,6 +25,14 @@ namespace CybrUtil {
     };
 
     std::string a_to_string(action a);
+
+    struct Terminal {
+        int width;
+        int height;
+        int margin;
+    };
+
     
+    bool terminal_changed(Terminal& _terminal_size, Terminal& _last_terminal_size);
 
 }

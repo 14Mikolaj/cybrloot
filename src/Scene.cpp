@@ -20,9 +20,14 @@ void Scene::draw() const {
 }
 
 void Scene::update() const {
-
     for (const auto& panel : panels) {
         panel.update();
+    }
+}
+
+void Scene::layout_panels(const CybrUtil::Terminal term) {
+    for (auto& panel : panels) {
+        panel.layout(term);
     }
 }
 
