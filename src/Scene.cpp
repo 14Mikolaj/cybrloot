@@ -26,8 +26,10 @@ void Scene::update() const {
 }
 
 void Scene::layout_panels(const CybrUtil::Terminal term) {
+    LayoutContext context{term.width, term.height, {}};
     for (auto& panel : panels) {
-        panel.layout(term);
+        panel.layout(term, context);
+        context.panels[panel.get_title()] = panel.get_rect();
     }
 }
 

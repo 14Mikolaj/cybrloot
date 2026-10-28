@@ -5,26 +5,48 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <functional>
+#include <utility>
+#include <unordered_map>
 
 #include "Element.hpp"
 #include "BorderPalette.hpp"
 #include "CybrUtil.hpp"
 
+struct Rect {
+    int x, y, w, h;
+    int left() const {return x;}
+    int right() const {return x + w;}
+    int top() const {return y;}
+    int bottom() const {return y + h;}
+};
+
+struct LayoutContext {
+    int cols;
+    int rows;
+    std::unordered_map<std::string, Rect> panels;
+    const Rect& get(const std::string& id) const {
+        return panels.at(id);
+    }
+};
+
 struct PanelPosition {
     enum class Mode {
         Absolute,
-        Relative
+        Relative,
+        Anchored
     };
     Mode mode;
-    float x;
-    float y;
-    float w;
-    float h;
+    float x, y, w, h;
+    std::function<Rect(const LayoutContext&)> anchor;
     static PanelPosition absolute(int x, int y, int w, int h) {
         return {Mode::Absolute, float(x), float(y), float(w), float (h)};
     }
     static PanelPosition relative(float x, float y, float w, float h) {
         return {Mode::Relative, x, y, w, h};
+    }
+    static PanelPosition anchored(std::function<Rect(const LayoutContext&)> rule){
+        return {Mode::Anchored, 0, 0, 0, 0, std::move(rule)};
     }
 };
 
@@ -37,8 +59,10 @@ public:
     void draw() const;
     void update() const;
     void add_element(std::unique_ptr<Element> element);
-    void layout(const CybrUtil::Terminal term);
+    void layout(const CybrUtil::Terminal term, const LayoutContext& context);
     void layout_elements();
+    Rect get_rect() const;
+    std::string get_title() const;
     const TextColor& resolve_color(Element::ColorRole role) const;
     const std::vector<std::unique_ptr<Element>>& get_elements() const;
     const PanelPosition::Mode get_panel_position() const;

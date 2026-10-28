@@ -78,7 +78,15 @@ void Panel::add_element(std::unique_ptr<Element> element) {
   elements.push_back(std::move(element)); 
 }
 
-void Panel::layout(const CybrUtil::Terminal term) {
+Rect Panel::get_rect() const {
+    return Rect{x_pos, y_pos, width + 2, height + 2};
+}
+
+std::string Panel::get_title() const {
+    return title;
+}
+
+void Panel::layout(const CybrUtil::Terminal term, const LayoutContext& context) {
     if (position.mode == PanelPosition::Mode::Relative) {
         int available_width = std::max(0, term.width - (2 * term.margin));
         int available_height = std::max(0, term.height - (2 * term.margin));
@@ -90,6 +98,13 @@ void Panel::layout(const CybrUtil::Terminal term) {
         y_pos = std::clamp(int((position.y * available_height) + term.margin + 1) - static_cast<int>((height + 2) / 2),
                 term.margin + 1,
                 std::max(term.margin + 1, term.margin + 1 + available_height - (height + 2)));
+    }
+    if (position.mode == PanelPosition::Mode::Anchored) {
+        Rect r = position.anchor(context);
+        x_pos = r.x;
+        y_pos = r.y;
+        width = std::max(0, r.w - 2);
+        height = std::max(0, r.h - 2);
     }
     layout_elements();
 }
