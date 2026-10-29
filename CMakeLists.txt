@@ -33,3 +33,17 @@ target_compile_features(cybrloot
     PRIVATE
     cxx_std_20
 )
+
+# Lightweight layout tests; no external test framework needed.
+include(CTest)
+if(BUILD_TESTING)
+    add_executable(layout_tests
+        tests/layout_tests.cpp
+        src/Panel.cpp
+        src/Scene.cpp
+        src/Element.cpp
+    )
+    target_include_directories(layout_tests PRIVATE include)
+    target_compile_features(layout_tests PRIVATE cxx_std_20)
+    add_test(NAME panel_layout COMMAND layout_tests)
+endif()

@@ -10,9 +10,10 @@
 Panel::Panel(PanelPosition _position,
         const std::string& _title,
         const std::string& _border,
-        const std::string& _theme) :
+        const std::string& _theme,
+        const std::string& _id) :
     position(_position),
-    title(_title), border(border_palette.at(_border)),
+    title(_title), id(_id.empty() ? _title : _id), border(border_palette.at(_border)),
     theme(color_palette.at(_theme)){
         if (position.mode == PanelPosition::Mode::Absolute) {
             x_pos = static_cast<int>(position.x);
@@ -84,6 +85,10 @@ Rect Panel::get_rect() const {
 
 std::string Panel::get_title() const {
     return title;
+}
+
+const std::string& Panel::get_id() const {
+    return id;
 }
 
 void Panel::layout(const CybrUtil::Terminal term, const LayoutContext& context) {

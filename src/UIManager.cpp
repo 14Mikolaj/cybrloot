@@ -39,22 +39,22 @@ void UIManager::init(CybrUtil::GameData& game) {
     Scene loadsave("loadsave");
 
     Scene dashboard("dashboard");
-    Panel menu_panel(PanelPosition::relative(0.0f, 0.0f, 0.2f, 0.75f), "MENU", "thin", "Arch");
-    Panel nodes_panel(PanelPosition::relative(1.0f, 0.0f, 0.2f, 0.75f), "NODES", "thick", "CachyOS");
-    Panel data_panel(PanelPosition::anchored([](const LayoutContext ctx){
-                const auto& menu = ctx.get("MENU");
-                const auto& nodes = ctx.get("NODES");
+    Panel menu_panel(PanelPosition::relative(0.0f, 0.0f, 0.2f, 0.75f), "MENU", "thin", "Arch", "menu");
+    Panel nodes_panel(PanelPosition::relative(1.0f, 0.0f, 0.2f, 0.75f), "NODES", "thick", "CachyOS", "nodes");
+    Panel data_panel(PanelPosition::anchored([](const LayoutContext& ctx){
+                const auto& menu = ctx.get("menu");
+                const auto& nodes = ctx.get("nodes");
                 return Rect{menu.right(), menu.top(), nodes.left() - menu.right(), menu.h / 3};
-                }), "DATA", "double", "Mint");
-    Panel console_panel(PanelPosition::anchored([](const LayoutContext ctx) {
-                const auto& data = ctx.get("DATA");
-                const auto& menu = ctx.get("MENU");
+                }), "DATA", "double", "Mint", "data");
+    Panel console_panel(PanelPosition::anchored([](const LayoutContext& ctx) {
+                const auto& data = ctx.get("data");
+                const auto& menu = ctx.get("menu");
                 return Rect{
                 data.left(),
                 data.bottom(),
                 data.w,
                 menu.bottom() - data.bottom()};
-                }), "CONSOLE", "rounded", "Ubuntu");
+                }), "CONSOLE", "rounded", "Ubuntu", "console");
     data_panel.add_element(std::make_unique<Text>(Position::relative(0.5f, 0.5f), [&game](){return "DATA: " + std::to_string(game.data);}));
     dashboard.add_panel(std::move(menu_panel));
     dashboard.add_panel(std::move(nodes_panel));
